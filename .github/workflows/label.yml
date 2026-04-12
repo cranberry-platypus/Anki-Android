@@ -144,7 +144,7 @@ jobs:
 
             async function deleteComments() {
               // Try to find comment to delete
-              for await (const comment of github.paginate.iterator(
+              for await (const page of github.paginate.iterator(
                 octokit.rest.issues.listComments,
                 {
                   owner: context.repo.owner,
@@ -152,13 +152,15 @@ jobs:
                   issue_number: context.issue.number,
                 },
               )) {
-                console.log(`Comment: ${JSON.stringify(comment)}`);
-                if (comment.user && comment.user.login === "github-actions[bot]" && comment.body.includes("This PR contains https://github.com/ankidroid/Anki-Android/labels/Strings changes")) {
-                  await github.rest.issues.deleteComment({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    comment_id: comment.id,
-                  });
+                for(const comment in page.dats) {
+                  console.log(`Comment: ${JSON.stringify(comment)}`);
+                  if (comment.user && comment.user.login === "github-actions[bot]" && comment.body.includes("This PR contains https://github.com/ankidroid/Anki-Android/labels/Strings changes")) {
+                    await github.rest.issues.deleteComment({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      comment_id: comment.id,
+                    });
+                  }
                 }
               }
             }
