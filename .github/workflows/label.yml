@@ -195,8 +195,8 @@ jobs:
               if (pullRequestData.data.labels.find(label => label.name === stringsLabel)) {
                 console.log(`Removing #${stringsLabel} label from PR #${context.issue.number}`);
                 removeLabel([stringsLabel]);
-                deleteComments();
               }
+              deleteComments();
             }
 
   add_new_contributor_label:
